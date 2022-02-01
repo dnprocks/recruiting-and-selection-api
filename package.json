@@ -1,0 +1,9 @@
+{
+  "name": "recruiting-and-selection-api",
+  "version": "0.0.1",
+  "description": "api de recrutamento e seleceção",
+  "main": "index.js",
+  "repository": "https://github.com/dnprocks/recruiting-and-selection-api.git",
+  "author": "Daniel Pimentel <daniel.pimentel@gmail.com>",
+  "license": "ISC"
+}
