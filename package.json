@@ -7,6 +7,7 @@
   "author": "Daniel Pimentel <daniel.pimentel@gmail.com>",
   "license": "ISC",
   "scripts": {
+    "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn src/server.ts --traspileOnly",
     "build": "tsc",
     "test": "jest",
