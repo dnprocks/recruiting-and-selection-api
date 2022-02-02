@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  app:
+    container_name: recruiting-and-selection-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    environment:
+      - PORT=8080
+    ports:
+      - 8080:8080
