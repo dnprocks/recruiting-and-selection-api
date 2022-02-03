@@ -13,7 +13,7 @@ export interface IJobService {
 export class JobService implements IJobService {
   constructor(private repository: IJobRepository = jobRepositoryMock) {}
 
-  public async create(req: Job): Promise<Job> {
+  public async create(req: JobParams): Promise<Job> {
     return this.repository.save(new Job({ ...req }));
   }
 
@@ -24,7 +24,7 @@ export class JobService implements IJobService {
     }
 
     try {
-      job.openJob();
+      job.publish();
     } catch (error) {
       throw error;
     }

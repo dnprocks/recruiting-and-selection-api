@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import Account from '../model/account';
 import { IAccountService, AccountService } from '../service/account-service';
 
@@ -17,14 +17,16 @@ export default class AccountController {
   private async createAccount(
     req: Request,
     res: Response,
+    next: NextFunction,
   ): Promise<Account | any> {
     // TODO: Usar para DTO
     try {
       const { body } = req;
       const newAccount = await this.accountService.create({ ...body });
-      return res.status(201).json(newAccount);
+      return res.status(201).json({ data: newAccount });
     } catch (error) {
-      return res.status(400).send({ message: error.message });
+      res.status(400);
+      next(error);
     }
   }
 }

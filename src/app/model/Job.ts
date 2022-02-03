@@ -4,28 +4,28 @@ export interface JobParams {
   id?: string;
   name: string;
   status?: JobStatus;
-  candidates?: string[];
+  applications?: string[];
 }
 
-type JobStatus = 'open' | 'closed';
+type JobStatus = 'published' | 'draft';
 export default class Job {
   id?: string;
   name: string;
   status?: JobStatus;
-  candidates?: string[] = [];
+  applications?: string[] = [];
 
   constructor(props: Omit<JobParams, 'id'>, id?: string) {
     if (!id) {
       this.id = crypto.randomUUID();
-      this.status = 'closed';
+      this.status = 'draft';
     }
     Object.assign(this, props);
   }
 
-  public openJob() {
-    if (this.status === 'open') {
+  public publish() {
+    if (this.status === 'published') {
       throw new Error('This job is already published.');
     }
-    this.status = 'open';
+    this.status = 'published';
   }
 }

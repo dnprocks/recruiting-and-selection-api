@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import Job from '../model/job';
 import { IJobService, JobService } from '../service/job-service';
 
@@ -18,29 +18,39 @@ export default class JobsController {
     this.router.get('/jobs/list-all-jobs', this.listAllJobs.bind(this));
   }
 
-  private async createJob(req: Request, res: Response): Promise<Job | any> {
+  private async createJob(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Job | any> {
     try {
       const { name } = req.body;
       const newJob = await this.jobService.create({ name });
-      return res.status(201).json(newJob);
+      return res.status(201).json({ data: newJob });
     } catch (error) {
-      return res.status(400).send({ message: error.message });
+      res.status(400);
+      next(error);
     }
   }
 
-  private async publishJob(req: Request, res: Response): Promise<Job | any> {
+  private async publishJob(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Job | any> {
     try {
       const { jobId } = req.params;
       const updateJob = await this.jobService.publishJob(jobId);
-      res.status(200).send(updateJob);
+      res.status(200).json({ data: updateJob });
     } catch (error) {
-      return res.status(400).send({ message: error.message });
+      res.status(400);
+      next(error);
     }
   }
 
   private async listAllJobs(req: Request, res: Response) {
     const listJobs = await this.jobService.findAll();
-    res.status(200).send(listJobs);
+    res.status(200).json({ data: listJobs });
   }
 
   private async sampleRoute(req: Request, res: Response) {
