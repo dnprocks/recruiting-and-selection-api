@@ -7,7 +7,7 @@ export interface IAccountRepository {
 
 export const dataBaseMock = new Map<string, object>();
 
-export const repositoryMock: IAccountRepository = {
+export const accountRepositoryMock: IAccountRepository = {
   save: (account: Account) => {
     return new Promise((resolve, reject) => {
       const newAccount = new Account({ ...account });

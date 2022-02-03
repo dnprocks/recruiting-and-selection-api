@@ -18,9 +18,13 @@ export default class AccountController {
     req: Request,
     res: Response,
   ): Promise<Account | any> {
-    // TODO: Usar para DTO?
-    const { body } = req;
-    const newAccount = await this.accountService.create({ ...body });
-    return res.status(200).json(new Account(newAccount));
+    // TODO: Usar para DTO
+    try {
+      const { body } = req;
+      const newAccount = await this.accountService.create({ ...body });
+      return res.status(201).json(newAccount);
+    } catch (error) {
+      return res.status(400).send({ message: error.message });
+    }
   }
 }
