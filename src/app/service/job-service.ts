@@ -1,3 +1,4 @@
+import Account from '../model/account';
 import Job, { JobParams } from '../model/job';
 import {
   accountRepositoryMock,
@@ -13,6 +14,7 @@ export interface IJobService {
   publishJob(id: string);
   findAll();
   applyToJob(jobId: string, accountId: string);
+  viewApplicationsByJob(jobId: string);
 }
 
 export class JobService implements IJobService {
@@ -35,32 +37,36 @@ export class JobService implements IJobService {
       throw new Error('None job found with this id');
     }
 
-    try {
-      job.publish();
-    } catch (error) {
-      throw error;
-    }
-
+    job.publish();
     return this.jobRepository.update(job);
   }
 
   public async applyToJob(id: string, accountId: string) {
-    const job = await this.jobRepository.findOne({ id });
-    if (!job) {
-      throw new Error('None job found with this id');
-    }
-
     const account = await this.accountRepository.findOneById(accountId);
     if (!account) {
       throw new Error('None Account found with this id');
     }
 
-    try {
-      job.apply(accountId);
-    } catch (error) {
-      throw error;
+    const job = await this.jobRepository.findOne({ id });
+    if (!job) {
+      throw new Error('None job found with this id');
     }
 
+    job.apply(accountId);
     return this.jobRepository.update(job);
+  }
+
+  public async viewApplicationsByJob(id: string): Promise<Account[]> {
+    const job = await this.jobRepository.findOne({ id });
+    console.log(id, job);
+    if (!job) {
+      throw new Error('None job found with this id');
+    }
+
+    return Promise.all(
+      job.applications.map(accountId =>
+        this.accountRepository.findOneById(accountId),
+      ),
+    );
   }
 }
