@@ -10,7 +10,7 @@ export const dataBaseMock = new Map<string, Account>();
 
 export const accountRepositoryMock: IAccountRepository = {
   save: (account: Account) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const newAccount = new Account({ ...account });
       dataBaseMock.set(newAccount.email, newAccount);
       resolve(newAccount);
@@ -21,9 +21,9 @@ export const accountRepositoryMock: IAccountRepository = {
     return dataBaseMock.get(param.email);
   },
 
-  findOneById: async (param: any) => {
+  findOneById: async (id: string) => {
     const key = [...dataBaseMock.entries()]
-      .filter(({ 1: v }) => v.id === param)
+      .filter(({ 1: v }) => v.id === id)
       .map(([k]) => k);
     return dataBaseMock.get(key[0]);
   },

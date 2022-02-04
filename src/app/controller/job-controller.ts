@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import Job from '../model/job';
+import { JobDTO } from '../model/job';
 import { IJobService, JobService } from '../service/job-service';
 
 export default class JobsController {
@@ -25,7 +25,7 @@ export default class JobsController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Job | any> {
+  ): Promise<Response<JobDTO>> {
     try {
       const { name } = req.body;
       const newJob = await this.jobService.create({ name });
@@ -40,32 +40,35 @@ export default class JobsController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Job | any> {
+  ): Promise<Response<JobDTO>> {
     try {
       const { jobId } = req.params;
-      const updateJob = await this.jobService.publishJob(jobId);
-      res.status(200).json({ data: updateJob });
+      const publishedJob = await this.jobService.publishJob(jobId);
+      return res.status(200).json({ data: publishedJob });
     } catch (error) {
       res.status(400);
       next(error);
     }
   }
 
-  private async listAllJobs(req: Request, res: Response) {
+  private async listAllJobs(
+    req: Request,
+    res: Response,
+  ): Promise<Response<JobDTO[]>> {
     const listJobs = await this.jobService.findAll();
-    res.status(200).json({ data: listJobs });
+    return res.status(200).json({ data: listJobs });
   }
 
   private async applyToJob(
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Job | any> {
+  ): Promise<Response<JobDTO>> {
     try {
       const { jobId } = req.params;
       const { accountId } = req.body;
-      const job = await this.jobService.applyToJob(jobId, accountId);
-      res.status(200).json({ data: job });
+      const jobApplied = await this.jobService.applyToJob(jobId, accountId);
+      return res.status(200).json({ data: jobApplied });
     } catch (error) {
       res.status(400);
       next(error);
@@ -76,11 +79,11 @@ export default class JobsController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ) {
+  ): Promise<Response<JobDTO[]>> {
     try {
       const { jobId } = req.params;
       const listJobs = await this.jobService.viewApplicationsByJob(jobId);
-      res.status(200).json({ data: listJobs });
+      return res.status(200).json({ data: listJobs });
     } catch (error) {
       res.status(400);
       next(error);

@@ -1,17 +1,17 @@
 import Job from '../model/job';
 
 export interface IJobRepository {
-  save(job: Job): any;
+  save(job: Job): Promise<Job>;
   findOne(param: any): Promise<Job>;
-  update(job: Job): Promise<Job | any>;
-  findAll();
+  update(job: Job): Promise<Job>;
+  findAll(): Promise<Job[]>;
 }
 
-export const dataBaseMock = new Map<string, object>();
+export const dataBaseMock = new Map<string, Job>();
 
 export const jobRepositoryMock: IJobRepository = {
-  save: async (job: Job) => {
-    return new Promise((resolve, reject) => {
+  save: async (job: Job): Promise<Job> => {
+    return new Promise(resolve => {
       const newJob = new Job({ ...job });
       dataBaseMock.set(newJob.id, newJob);
       resolve(newJob);
@@ -27,7 +27,7 @@ export const jobRepositoryMock: IJobRepository = {
     return dataBaseMock.get(job.id);
   },
 
-  findAll: function () {
+  findAll: async (): Promise<Job[]> => {
     return Array.from(dataBaseMock.values());
   },
 };

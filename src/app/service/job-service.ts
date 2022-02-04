@@ -10,11 +10,11 @@ import {
 } from '../repository/job-repository';
 
 export interface IJobService {
-  create(job: JobParams): Promise<any>;
-  publishJob(id: string);
-  findAll();
-  applyToJob(jobId: string, accountId: string);
-  viewApplicationsByJob(jobId: string);
+  create(job: JobParams): Promise<Job>;
+  publishJob(id: string): Promise<Job>;
+  findAll(): Promise<Job[]>;
+  applyToJob(jobId: string, accountId: string): Promise<Job>;
+  viewApplicationsByJob(jobId: string): Promise<Account[]>;
 }
 
 export class JobService implements IJobService {
@@ -31,7 +31,7 @@ export class JobService implements IJobService {
     return this.jobRepository.findAll();
   }
 
-  public async publishJob(id: string) {
+  public async publishJob(id: string): Promise<Job> {
     const job = await this.jobRepository.findOne({ id });
     if (!job) {
       throw new Error('None job found with this id');
@@ -41,7 +41,7 @@ export class JobService implements IJobService {
     return this.jobRepository.update(job);
   }
 
-  public async applyToJob(id: string, accountId: string) {
+  public async applyToJob(id: string, accountId: string): Promise<Job> {
     const account = await this.accountRepository.findOneById(accountId);
     if (!account) {
       throw new Error('None Account found with this id');

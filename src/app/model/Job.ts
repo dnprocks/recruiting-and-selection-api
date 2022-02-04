@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 
+export type JobDTO = JobParams;
 export interface JobParams {
   id?: string;
   name: string;
