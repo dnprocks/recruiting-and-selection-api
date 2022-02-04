@@ -31,6 +31,9 @@ export default class Job {
   }
 
   public apply(accountId: string) {
+    if (this.status === 'draft') {
+      throw new Error('This job is not published.');
+    }
     if (this.applications.includes(accountId)) {
       throw new Error(`This account has already applied for the job`);
     }
