@@ -30,14 +30,21 @@ class App {
     this.app.use(this.pathApi, this.accountController.router);
     this.app.use(this.pathApi, this.jobsController.router);
 
-    this.app.use(async (error: Error, _: Request, response: Response) => {
-      if (response.statusCode >= 400) {
-        response.json({
-          statusCode: response.statusCode,
-          message: error.message,
-        });
-      }
-    });
+    this.app.use(
+      async (
+        error: Error,
+        req: Request,
+        response: Response,
+        _: NextFunction,
+      ) => {
+        if (error) {
+          response.json({
+            statusCode: response.statusCode,
+            message: error.message,
+          });
+        }
+      },
+    );
 
     this.app.use('*', (req, res) => {
       res.status(404).send({ message: 'page not found!' });
