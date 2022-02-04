@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import Job from '../model/job';
+import { AccountService, IAccountService } from '../service/account-service';
 import { IJobService, JobService } from '../service/job-service';
 
 export default class JobsController {
@@ -11,7 +12,7 @@ export default class JobsController {
   }
 
   private routes() {
-    this.router.post('/jobs/apply/:jobId', this.sampleRoute);
+    this.router.post('/jobs/apply/:jobId', this.applyToJob.bind(this));
     this.router.get('/jobs/view-applications/:jobId', this.sampleRoute);
     this.router.patch('/jobs/publish-job/:jobId', this.publishJob.bind(this));
     this.router.post('/jobs/create-job', this.createJob.bind(this));
@@ -51,6 +52,22 @@ export default class JobsController {
   private async listAllJobs(req: Request, res: Response) {
     const listJobs = await this.jobService.findAll();
     res.status(200).json({ data: listJobs });
+  }
+
+  private async applyToJob(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Job | any> {
+    try {
+      const { jobId } = req.params;
+      const { accountId } = req.body;
+      const job = await this.jobService.applyToJob(jobId, accountId);
+      res.status(200).json({ data: job });
+    } catch (error) {
+      res.status(400);
+      next(error);
+    }
   }
 
   private async sampleRoute(req: Request, res: Response) {

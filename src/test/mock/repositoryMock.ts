@@ -12,7 +12,11 @@ export const repositoryMock: IAccountRepository = {
     });
   },
 
-  findOne: (param: any) => {
+  findOneByEmail: (param: any) => {
     return dataBaseMock.get(param.email);
+  },
+
+  findOneById: function (param: any) {
+    throw new Error('Function not implemented.');
   },
 };

@@ -28,4 +28,11 @@ export default class Job {
     }
     this.status = 'published';
   }
+
+  public apply(accountId: string) {
+    if (this.applications.includes(accountId)) {
+      throw new Error(`This account has already applied for the job`);
+    }
+    this.applications.push(accountId);
+  }
 }

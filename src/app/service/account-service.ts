@@ -12,7 +12,7 @@ export class AccountService implements IAccountService {
   constructor(private repository: IAccountRepository = accountRepositoryMock) {}
 
   public async create(req: Account): Promise<Account> {
-    const account = await this.repository.findOne({ email: req.email });
+    const account = await this.repository.findOneByEmail({ email: req.email });
     if (account) {
       throw new Error('Account already exists.');
     }

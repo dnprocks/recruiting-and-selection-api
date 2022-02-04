@@ -2,10 +2,11 @@ import Account from '../model/account';
 
 export interface IAccountRepository {
   save(account: Account): any;
-  findOne(param: any): any;
+  findOneByEmail(param: any): any;
+  findOneById(param: any): any;
 }
 
-export const dataBaseMock = new Map<string, object>();
+export const dataBaseMock = new Map<string, Account>();
 
 export const accountRepositoryMock: IAccountRepository = {
   save: (account: Account) => {
@@ -16,7 +17,14 @@ export const accountRepositoryMock: IAccountRepository = {
     });
   },
 
-  findOne: (param: any) => {
+  findOneByEmail: (param: any) => {
     return dataBaseMock.get(param.email);
+  },
+
+  findOneById: function (param: any) {
+    const key = [...dataBaseMock.entries()]
+      .filter(({ 1: v }) => v.id === param)
+      .map(([k]) => k);
+    return dataBaseMock.get(key[0]);
   },
 };
