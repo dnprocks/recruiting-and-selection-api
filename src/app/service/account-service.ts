@@ -5,7 +5,7 @@ import {
 } from '../repository/account-repository';
 
 export interface IAccountService {
-  create(account: Account): Promise<any>;
+  create(account: Account): Promise<Account>;
 }
 
 export class AccountService implements IAccountService {

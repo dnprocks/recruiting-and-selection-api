@@ -1,9 +1,9 @@
 import Account from '../model/account';
 
 export interface IAccountRepository {
-  save(account: Account): any;
-  findOneByEmail(param: any): any;
-  findOneById(param: any): any;
+  save(account: Account): Promise<Account>;
+  findOneByEmail(param: any): Promise<Account>;
+  findOneById(param: any): Promise<Account>;
 }
 
 export const dataBaseMock = new Map<string, Account>();
@@ -17,11 +17,11 @@ export const accountRepositoryMock: IAccountRepository = {
     });
   },
 
-  findOneByEmail: (param: any) => {
+  findOneByEmail: async (param: any) => {
     return dataBaseMock.get(param.email);
   },
 
-  findOneById: function (param: any) {
+  findOneById: async (param: any) => {
     const key = [...dataBaseMock.entries()]
       .filter(({ 1: v }) => v.id === param)
       .map(([k]) => k);
