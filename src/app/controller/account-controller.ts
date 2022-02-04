@@ -17,7 +17,7 @@ export default class AccountController {
       '/accounts/create-account',
       validate([
         body('email').isEmail(),
-        body('name').exists(),
+        body('name').notEmpty({ ignore_whitespace: true }),
         body('password').isLength({ min: 6 }),
       ]),
       this.createAccount.bind(this),

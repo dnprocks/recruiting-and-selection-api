@@ -15,7 +15,7 @@ export default class JobsController {
   private routes() {
     this.router.post(
       '/jobs/apply/:jobId',
-      validate([body('accountId').exists()]),
+      validate([body('accountId').notEmpty({ ignore_whitespace: true })]),
       this.applyToJob.bind(this),
     );
     this.router.get(
@@ -24,7 +24,7 @@ export default class JobsController {
     );
     this.router.post(
       '/jobs/create-job',
-      validate([body('name').exists()]),
+      validate([body('name').notEmpty({ ignore_whitespace: true })]),
       this.createJob.bind(this),
     );
     this.router.patch('/jobs/publish-job/:jobId', this.publishJob.bind(this));
