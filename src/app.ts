@@ -2,6 +2,9 @@ import './bootstrap';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import AccountController from './app/controller/account-controller';
 import JobsController from './app/controller/job-controller';
+import helmet from 'helmet';
+import cors from 'cors';
+import compression from 'compression';
 
 class App {
   public app: Application;
@@ -17,6 +20,9 @@ class App {
   }
 
   private middleware() {
+    this.app.use(helmet());
+    this.app.use(cors());
+    this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   }

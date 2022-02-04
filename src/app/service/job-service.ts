@@ -58,7 +58,6 @@ export class JobService implements IJobService {
 
   public async viewApplicationsByJob(id: string): Promise<Account[]> {
     const job = await this.jobRepository.findOne({ id });
-    console.log(id, job);
     if (!job) {
       throw new Error('None job found with this id');
     }
