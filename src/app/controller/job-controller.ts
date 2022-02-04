@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { body, param } from 'express-validator';
 import { JobDTO } from '../model/job';
 import { IJobService, JobService } from '../service/job-service';
+import { validate } from './validator/validator';
 
 export default class JobsController {
   public router: Router;
@@ -11,13 +13,21 @@ export default class JobsController {
   }
 
   private routes() {
-    this.router.post('/jobs/apply/:jobId', this.applyToJob.bind(this));
+    this.router.post(
+      '/jobs/apply/:jobId',
+      validate([body('accountId').exists()]),
+      this.applyToJob.bind(this),
+    );
     this.router.get(
       '/jobs/view-applications/:jobId',
       this.viewApplications.bind(this),
     );
+    this.router.post(
+      '/jobs/create-job',
+      validate([body('name').exists()]),
+      this.createJob.bind(this),
+    );
     this.router.patch('/jobs/publish-job/:jobId', this.publishJob.bind(this));
-    this.router.post('/jobs/create-job', this.createJob.bind(this));
     this.router.get('/jobs/list-all-jobs', this.listAllJobs.bind(this));
   }
 

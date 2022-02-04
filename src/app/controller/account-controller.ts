@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { body } from 'express-validator';
 import { AccountDTO } from '../model/account';
 import { IAccountService, AccountService } from '../service/account-service';
+import { validate } from './validator/validator';
 
 export default class AccountController {
   public router: Router;
@@ -11,7 +13,15 @@ export default class AccountController {
   }
 
   private routes() {
-    this.router.post('/accounts/create-account', this.createAccount.bind(this));
+    this.router.post(
+      '/accounts/create-account',
+      validate([
+        body('email').isEmail(),
+        body('name').exists(),
+        body('password').isLength({ min: 6 }),
+      ]),
+      this.createAccount.bind(this),
+    );
   }
 
   private async createAccount(
