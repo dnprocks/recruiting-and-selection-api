@@ -1,21 +1,21 @@
 import Account from '../model/account';
 import {
   IAccountRepository,
-  repositoryMock,
+  accountRepositoryMock,
 } from '../repository/account-repository';
 
 export interface IAccountService {
-  create(account: Account): Promise<any>;
+  create(account: Account): Promise<Account>;
 }
 
 export class AccountService implements IAccountService {
-  constructor(private repository: IAccountRepository = repositoryMock) {}
+  constructor(private repository: IAccountRepository = accountRepositoryMock) {}
 
   public async create(req: Account): Promise<Account> {
-    const account = await this.repository.findOne({ email: req.email });
+    const account = await this.repository.findOneByEmail({ email: req.email });
     if (account) {
       throw new Error('Account already exists.');
     }
-    return new Account(this.repository.save(req));
+    return this.repository.save(req);
   }
 }

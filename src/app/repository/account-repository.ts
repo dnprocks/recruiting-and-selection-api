@@ -1,22 +1,30 @@
 import Account from '../model/account';
 
 export interface IAccountRepository {
-  save(account: Account): any;
-  findOne(param: any): any;
+  save(account: Account): Promise<Account>;
+  findOneByEmail(param: any): Promise<Account>;
+  findOneById(param: any): Promise<Account>;
 }
 
-export const dataBaseMock = new Map<string, object>();
+export const dataBaseMock = new Map<string, Account>();
 
-export const repositoryMock: IAccountRepository = {
+export const accountRepositoryMock: IAccountRepository = {
   save: (account: Account) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const newAccount = new Account({ ...account });
       dataBaseMock.set(newAccount.email, newAccount);
       resolve(newAccount);
     });
   },
 
-  findOne: (param: any) => {
+  findOneByEmail: async (param: any) => {
     return dataBaseMock.get(param.email);
+  },
+
+  findOneById: async (id: string) => {
+    const key = [...dataBaseMock.entries()]
+      .filter(({ 1: v }) => v.id === id)
+      .map(([k]) => k);
+    return dataBaseMock.get(key[0]);
   },
 };

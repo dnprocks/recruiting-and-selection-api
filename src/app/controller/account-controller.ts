@@ -1,6 +1,8 @@
-import { Request, Response, Router } from 'express';
-import Account from '../model/account';
+import { NextFunction, Request, Response, Router } from 'express';
+import { body } from 'express-validator';
+import { AccountDTO } from '../model/account';
 import { IAccountService, AccountService } from '../service/account-service';
+import { validate } from './validator/validator';
 
 export default class AccountController {
   public router: Router;
@@ -11,16 +13,36 @@ export default class AccountController {
   }
 
   private routes() {
-    this.router.post('/accounts/create-account', this.createAccount.bind(this));
+    this.router.post(
+      '/accounts/create-account',
+      validate([
+        body('email').isEmail(),
+        body('name').notEmpty({ ignore_whitespace: true }),
+        body('password').isLength({ min: 6 }),
+      ]),
+      this.createAccount.bind(this),
+    );
   }
 
   private async createAccount(
     req: Request,
     res: Response,
-  ): Promise<Account | any> {
-    // TODO: Usar para DTO?
-    const { body } = req;
-    const newAccount = await this.accountService.create({ ...body });
-    return res.status(200).json(new Account(newAccount));
+    next: NextFunction,
+  ): Promise<Response<AccountDTO>> {
+    try {
+      const { body } = req;
+      const newAccount = await this.accountService.create({
+        ...body,
+      });
+
+      const data = new AccountDTO({
+        ...newAccount,
+      });
+
+      return res.status(201).json({ data });
+    } catch (error) {
+      res.status(400);
+      next(error);
+    }
   }
 }
