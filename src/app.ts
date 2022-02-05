@@ -1,10 +1,12 @@
 import './bootstrap';
+import './config/mongoose-config';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import AccountController from './app/controller/account-controller';
 import JobsController from './app/controller/job-controller';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import morgan from 'morgan';
 
 class App {
   public app: Application;
@@ -25,6 +27,7 @@ class App {
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(morgan('dev'));
   }
 
   private configurationController() {
