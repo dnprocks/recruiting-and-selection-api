@@ -1,30 +1,33 @@
 import Account from '../model/account';
+import AccountSchema from '../schemas/account-schema';
 
 export interface IAccountRepository {
-  save(account: Account): Promise<Account>;
-  findOneByEmail(param: any): Promise<Account>;
-  findOneById(param: any): Promise<Account>;
+  save(account: Account): Promise<Account | any>;
+  findOneByEmail(email: string): Promise<Account>;
+  findOneById(id: string): Promise<Account>;
 }
 
-export const dataBaseMock = new Map<string, Account>();
+export class AccountRepository implements IAccountRepository {
+  async save(account: Account): Promise<Account> {
+    try {
+      const data = await AccountSchema.create({
+        _id: account.id,
+        name: account.name,
+        email: account.email,
+        password: account.password,
+      });
+      return data.toJSON();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
-export const accountRepositoryMock: IAccountRepository = {
-  save: (account: Account) => {
-    return new Promise(resolve => {
-      const newAccount = new Account({ ...account });
-      dataBaseMock.set(newAccount.email, newAccount);
-      resolve(newAccount);
-    });
-  },
+  async findOneByEmail(email: string): Promise<Account> {
+    return AccountSchema.findOne({ email });
+  }
 
-  findOneByEmail: async (param: any) => {
-    return dataBaseMock.get(param.email);
-  },
-
-  findOneById: async (id: string) => {
-    const key = [...dataBaseMock.entries()]
-      .filter(({ 1: v }) => v.id === id)
-      .map(([k]) => k);
-    return dataBaseMock.get(key[0]);
-  },
-};
+  async findOneById(id: string): Promise<Account> {
+    return AccountSchema.findById(id);
+  }
+}

@@ -1,7 +1,7 @@
 import Account from '../model/account';
 import {
+  AccountRepository,
   IAccountRepository,
-  accountRepositoryMock,
 } from '../repository/account-repository';
 
 export interface IAccountService {
@@ -9,13 +9,24 @@ export interface IAccountService {
 }
 
 export class AccountService implements IAccountService {
-  constructor(private repository: IAccountRepository = accountRepositoryMock) {}
+  constructor(
+    private repository: IAccountRepository = new AccountRepository(),
+  ) {}
 
-  public async create(req: Account): Promise<Account> {
-    const account = await this.repository.findOneByEmail({ email: req.email });
+  public async create(accountRequest: Account): Promise<Account> {
+    const account = await this.repository.findOneByEmail(accountRequest.email);
     if (account) {
       throw new Error('Account already exists.');
     }
-    return this.repository.save(req);
+
+    const data = await this.repository.save(
+      new Account({
+        name: accountRequest.name,
+        email: accountRequest.email,
+        password: accountRequest.password,
+      }),
+    );
+    const { _id: id } = data;
+    return new Account({ id, ...data });
   }
 }

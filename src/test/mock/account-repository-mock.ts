@@ -3,7 +3,7 @@ import { IAccountRepository } from '../../app/repository/account-repository';
 
 export const dataBaseMock = new Map<string, Account>();
 
-export const repositoryMock: IAccountRepository = {
+export const accountRepositoryMock: IAccountRepository = {
   save: (account: Account) => {
     return new Promise(resolve => {
       const newAccount = new Account({ ...account });
@@ -12,8 +12,8 @@ export const repositoryMock: IAccountRepository = {
     });
   },
 
-  findOneByEmail: async (param: any) => {
-    return dataBaseMock.get(param.email);
+  findOneByEmail: async (email: any) => {
+    return dataBaseMock.get(email);
   },
 
   findOneById: async (id: string) => {

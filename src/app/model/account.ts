@@ -16,10 +16,10 @@ export default class Account {
   email: string;
   password: string;
 
-  constructor(props: Omit<Account, 'id'>, id?: string) {
-    if (!id) {
-      this.id = crypto.randomUUID();
-    }
-    Object.assign(this, props);
+  constructor({ id, name, email, password }: Account) {
+    this.id = id || crypto.randomUUID();
+    this.name = name;
+    this.email = email;
+    this.password = password;
   }
 }
