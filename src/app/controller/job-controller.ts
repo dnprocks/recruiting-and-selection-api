@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { body, param } from 'express-validator';
+import { body } from 'express-validator';
 import { JobDTO } from '../model/job';
 import { IJobService, JobService } from '../service/job-service';
 import { validate } from './validator/validator';

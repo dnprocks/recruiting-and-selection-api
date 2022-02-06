@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { AccountService } from '../app/service/account-service';
-import { dataBaseMock, repositoryMock } from './mock/account-repository-mock';
+import {
+  dataBaseMock,
+  accountRepositoryMock,
+} from './mock/account-repository-mock';
 
 export const newAccount = () => {
   return {
@@ -11,7 +14,7 @@ export const newAccount = () => {
 };
 
 describe('Create a new account', () => {
-  const serviceAccount = new AccountService(repositoryMock);
+  const serviceAccount = new AccountService(accountRepositoryMock);
   const duplicatedEmail = faker.internet.email();
 
   test('creating a not existing account', async () => {

@@ -1,11 +1,5 @@
+import { IJobRepository } from '../../app/repository/job-repository';
 import Job from '../../../src/app/model/job';
-
-export interface IJobRepository {
-  save(job: Job): Promise<Job>;
-  findOne(param: any): Promise<Job>;
-  update(job: Job): Promise<Job>;
-  findAll(): Promise<Job[]>;
-}
 
 export const dataBaseMock = new Map<string, Job>();
 
@@ -18,8 +12,8 @@ export const jobRepositoryMock: IJobRepository = {
     });
   },
 
-  findOne: async (param: any): Promise<any> => {
-    return dataBaseMock.get(param.id);
+  findOneById: async (id: any): Promise<any> => {
+    return dataBaseMock.get(id);
   },
 
   update: async (job: Job): Promise<any> => {

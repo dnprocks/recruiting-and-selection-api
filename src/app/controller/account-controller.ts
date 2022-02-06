@@ -35,11 +35,11 @@ export default class AccountController {
         ...body,
       });
 
-      const data = new AccountDTO({
-        ...newAccount,
+      return res.status(201).json({
+        data: new AccountDTO({
+          ...newAccount,
+        }),
       });
-
-      return res.status(201).json({ data });
     } catch (error) {
       res.status(400);
       next(error);
