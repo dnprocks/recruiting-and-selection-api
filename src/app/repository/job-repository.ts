@@ -1,33 +1,49 @@
 import Job from '../model/job';
+import JobSchema from '../schemas/job-schema';
 
 export interface IJobRepository {
-  save(job: Job): Promise<Job>;
-  findOne(param: any): Promise<Job>;
+  save(job: Job): Promise<Job | any>;
+  findOneById(id: string): Promise<Job>;
   update(job: Job): Promise<Job>;
-  findAll(): Promise<Job[]>;
+  findAll(): Promise<Job[] | any>;
 }
 
-export const dataBaseMock = new Map<string, Job>();
-
-export const jobRepositoryMock: IJobRepository = {
-  save: async (job: Job): Promise<Job> => {
-    return new Promise(resolve => {
-      const newJob = new Job({ ...job });
-      dataBaseMock.set(newJob.id, newJob);
-      resolve(newJob);
+export class JobRepository implements IJobRepository {
+  async save(jobParams: Job): Promise<Job> {
+    const job = await JobSchema.create({
+      _id: jobParams.id,
+      name: jobParams.name,
+      status: jobParams.status,
     });
-  },
+    return this.toObjectJob(job);
+  }
 
-  findOne: async (param: any): Promise<any> => {
-    return dataBaseMock.get(param.id);
-  },
+  async findOneById(id: string): Promise<Job> {
+    const job = await JobSchema.findById(id);
+    return this.toObjectJob(job);
+  }
 
-  update: async (job: Job): Promise<any> => {
-    dataBaseMock.set(job.id, job);
-    return dataBaseMock.get(job.id);
-  },
+  async update(jobParams: Job): Promise<Job> {
+    const job = (await JobSchema.findById(jobParams.id)).set(jobParams);
+    await job.save();
+    return this.toObjectJob(job);
+  }
 
-  findAll: async (): Promise<Job[]> => {
-    return Array.from(dataBaseMock.values());
-  },
-};
+  async findAll(): Promise<Job[]> {
+    const listJobs = await JobSchema.find();
+    return listJobs.map(job => this.toObjectJob(job));
+  }
+
+  private toObjectJob(job) {
+    if (!job) {
+      return null;
+    }
+    const { _id, name, status, applications } = job;
+    return new Job({
+      id: _id.toString(),
+      name,
+      status,
+      applications,
+    });
+  }
+}

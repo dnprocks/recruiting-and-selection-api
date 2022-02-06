@@ -2,12 +2,12 @@ import { faker } from '@faker-js/faker';
 import { AccountService } from '../../src/app/service/account-service';
 import { JobService } from '../../src/app/service/job-service';
 import { newAccount } from './account-service.test';
-import { repositoryMock } from './mock/account-repository-mock';
+import { accountRepositoryMock } from './mock/account-repository-mock';
 import { jobRepositoryMock } from './mock/job-repository-mock';
 
 describe('Job validations', () => {
-  const serviceJob = new JobService(jobRepositoryMock, repositoryMock);
-  const serviceAccount = new AccountService(repositoryMock);
+  const serviceJob = new JobService(jobRepositoryMock, accountRepositoryMock);
+  const serviceAccount = new AccountService(accountRepositoryMock);
   let job;
   let account;
   beforeAll(async () => {
