@@ -1,5 +1,5 @@
 export default {
-  collectCoverage: false,
+  collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
