@@ -24,6 +24,7 @@ services:
     environment:
       - PORT=8080
       - MONGO_URL=$MONGO_URL
+      - PATH_API=$PATH_API
     ports:
       - 8080:8080
     depends_on:
