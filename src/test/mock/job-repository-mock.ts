@@ -1,5 +1,5 @@
 import { IJobRepository } from '../../app/repository/job-repository';
-import Job from '../../../src/app/model/job';
+import Job from '../../app/model/job';
 
 export const dataBaseMock = new Map<string, Job>();
 
