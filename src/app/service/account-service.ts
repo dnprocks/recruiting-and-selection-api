@@ -19,14 +19,16 @@ export class AccountService implements IAccountService {
       throw new Error('Account already exists.');
     }
 
-    const data = await this.repository.save(
-      new Account({
-        name: accountRequest.name,
-        email: accountRequest.email,
-        password: accountRequest.password,
-      }),
-    );
-    const { _id: id } = data;
-    return new Account({ id, ...data });
+    try {
+      return this.repository.save(
+        new Account({
+          name: accountRequest.name,
+          email: accountRequest.email,
+          password: accountRequest.password,
+        }),
+      );
+    } catch (error) {
+      throw new Error('Fail to create account');
+    }
   }
 }

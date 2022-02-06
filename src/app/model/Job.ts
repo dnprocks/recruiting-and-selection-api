@@ -15,12 +15,11 @@ export default class Job {
   status?: JobStatus;
   applications?: string[] = [];
 
-  constructor(props: Omit<JobParams, 'id'>, id?: string) {
-    if (!id) {
-      this.id = crypto.randomUUID();
-      this.status = 'draft';
-    }
-    Object.assign(this, props);
+  constructor({ id, name, status = 'draft', applications = [] }: JobParams) {
+    this.id = id || crypto.randomUUID();
+    this.name = name;
+    this.status = status;
+    this.applications = applications;
   }
 
   public publish() {
