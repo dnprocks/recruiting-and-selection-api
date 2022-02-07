@@ -44,7 +44,7 @@ class App {
         error: Error,
         req: Request,
         response: Response,
-        next: NextFunction,
+        _: NextFunction,
       ) => {
         if (error) {
           response.json({
@@ -52,7 +52,6 @@ class App {
             message: error.message,
           });
         }
-        next();
       },
     );
 
