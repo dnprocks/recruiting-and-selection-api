@@ -35,6 +35,7 @@ export class JobRepository implements IJobRepository {
   }
 
   private normalizeReturnId(obj) {
+    if (!obj) return null;
     const new_obj = Object.assign({}, { id: obj._id, ...obj._doc });
     delete new_obj._id;
     delete new_obj.__v;
