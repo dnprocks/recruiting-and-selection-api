@@ -4,6 +4,7 @@ class Mongoose {
   constructor() {
     this.connect();
   }
+
   async connect() {
     try {
       await mongoose.connect(`${process.env.MONGO_URL}`, { ssl: false });

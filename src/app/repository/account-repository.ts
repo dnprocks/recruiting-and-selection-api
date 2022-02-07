@@ -15,29 +15,23 @@ export class AccountRepository implements IAccountRepository {
       email: accountParams.email,
       password: accountParams.password,
     });
-    return this.toObjectAccount(account);
+    return this.normalizeReturnId(account);
   }
 
   async findOneByEmail(email: string): Promise<Account> {
     const account = await AccountSchema.findOne({ email });
-    return this.toObjectAccount(account);
+    return this.normalizeReturnId(account);
   }
 
   async findOneById(id: string): Promise<Account> {
     const account = await AccountSchema.findById(id);
-    return this.toObjectAccount(account);
+    return this.normalizeReturnId(account);
   }
 
-  private toObjectAccount(account) {
-    if (!account) {
-      return null;
-    }
-    const { _id, name, email, password } = account;
-    return new Account({
-      id: _id.toString(),
-      name,
-      email,
-      password,
-    });
+  private normalizeReturnId(obj) {
+    const new_obj = Object.assign({}, { id: obj._id, ...obj._doc });
+    delete new_obj._id;
+    delete new_obj.__v;
+    return new_obj;
   }
 }
