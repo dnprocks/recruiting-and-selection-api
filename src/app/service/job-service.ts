@@ -41,8 +41,7 @@ export class JobService implements IJobService {
     if (!job) {
       throw new Error('None job found with this id');
     }
-    job.publish();
-    return this.jobRepository.update(job);
+    return this.jobRepository.update(new Job({ ...job }).publish());
   }
 
   public async applyToJob(id: string, accountId: string): Promise<Job> {
@@ -56,8 +55,7 @@ export class JobService implements IJobService {
       throw new Error('None job found with this id');
     }
 
-    job.apply(accountId);
-    return this.jobRepository.update(job);
+    return this.jobRepository.update(new Job({ ...job }).apply(accountId));
   }
 
   public async viewApplicationsByJob(id: string): Promise<Account[]> {

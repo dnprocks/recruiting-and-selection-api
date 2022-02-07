@@ -15,35 +15,29 @@ export class JobRepository implements IJobRepository {
       name: jobParams.name,
       status: jobParams.status,
     });
-    return this.toObjectJob(job);
+    return this.normalizeReturnId(job);
   }
 
   async findOneById(id: string): Promise<Job> {
     const job = await JobSchema.findById(id);
-    return this.toObjectJob(job);
+    return this.normalizeReturnId(job);
   }
 
   async update(jobParams: Job): Promise<Job> {
     const job = (await JobSchema.findById(jobParams.id)).set(jobParams);
     await job.save();
-    return this.toObjectJob(job);
+    return this.normalizeReturnId(job);
   }
 
   async findAll(): Promise<Job[]> {
     const listJobs = await JobSchema.find();
-    return listJobs.map(job => this.toObjectJob(job));
+    return listJobs.map(job => this.normalizeReturnId(job));
   }
 
-  private toObjectJob(job) {
-    if (!job) {
-      return null;
-    }
-    const { _id, name, status, applications } = job;
-    return new Job({
-      id: _id.toString(),
-      name,
-      status,
-      applications,
-    });
+  private normalizeReturnId(obj) {
+    const new_obj = Object.assign({}, { id: obj._id, ...obj._doc });
+    delete new_obj._id;
+    delete new_obj.__v;
+    return new_obj;
   }
 }

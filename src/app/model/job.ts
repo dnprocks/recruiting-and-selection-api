@@ -27,6 +27,7 @@ export default class Job {
       throw new Error('This job is already published.');
     }
     this.status = 'published';
+    return this;
   }
 
   public apply(accountId: string) {
@@ -37,5 +38,6 @@ export default class Job {
       throw new Error(`This account has already applied for the job`);
     }
     this.applications.push(accountId);
+    return this;
   }
 }
